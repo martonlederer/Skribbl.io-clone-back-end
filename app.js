@@ -31,8 +31,6 @@ io.on('connection', (client) => {
 
     client.emit('joinGame', true);
 
-    console.log(rooms[gameCode].getPlayers());
-
   });
 
 });

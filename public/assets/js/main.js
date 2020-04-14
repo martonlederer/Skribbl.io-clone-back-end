@@ -1,9 +1,13 @@
 const socket = io();
 
-socket.emit('joinGame', 'test name', 1010);
+document.querySelector('#joinGame').addEventListener('click', () => {
 
-socket.on('joinGame', (success) => {
+  socket.emit('joinGame', document.querySelector('#name').value, document.querySelector('#gameCode').value);
 
-  console.log(success);
+  socket.on('joinGame', (success) => {
+
+    console.log(success);
+
+  });
 
 });

@@ -2,7 +2,11 @@
 const express = require('express'),
 bodyParser = require('body-parser'),
 app = express(),
-config = require('./config.json');
+server = require('http').Server(app);
+io = require('socket.io')(server);
+config = require('./config.json'),
+room = require('./app/room.js'),
+rooms = {};
 
 //using public folder for get requests
 app.use(express.static(__dirname + '/public', {extensions: ['html']}));
@@ -10,24 +14,25 @@ app.use(express.static(__dirname + '/public', {extensions: ['html']}));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
-//API handlers
-app.all('/api/*', function(request, response, next) {
+server.listen(config.port, () => {
 
-  try {
-
-    const handler = require(`./app/api/${request.method.toLowerCase()}.js`);
-    handler.handle(request, response, next);
-
-  }catch(exception) {
-
-    response.json({'error': true, 'message': 'Unsupported request type.'});
-
-  }
+  console.log(`Server started on port ${config.port}`);
 
 });
 
-app.listen(config.port, function() {
+io.on('connection', (client) => {
 
-  console.log(`Server started on port ${config.port}`);
+  client.on('joinGame', (name, gameCode) => {
+
+    if(!(gameCode in rooms))
+      rooms[gameCode] = room(gameCode);
+
+    rooms[gameCode].addPlayer(name, client.id);
+
+    client.emit('joinGame', true);
+
+    console.log(rooms[gameCode].getPlayers());
+
+  });
 
 });

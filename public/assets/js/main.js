@@ -1,9 +1,9 @@
-jQuery(function($) {
+const socket = io();
 
-  $(document).ready(function() {
+socket.emit('joinGame', 'test name', 1010);
 
-    
+socket.on('joinGame', (success) => {
 
-  });
+  console.log(success);
 
 });

@@ -11,7 +11,16 @@ module.exports = (client) => {
     rooms[gameCode].addPlayer(name, client);
     client.Room = rooms[gameCode];
 
-    callback(true);
+    //removing client
+    const safePlayers = {};
+
+    for(p in client.Room.getPlayers()) {
+
+      safePlayers[p] = {name: client.Room.getPlayers()[p].name, points: client.Room.getPlayers()[p].points}
+
+    }
+
+    callback(true, safePlayers, client.Room.getStatus(), client.id);
 
   });
 

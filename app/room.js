@@ -24,24 +24,29 @@ module.exports = (code) => {
 
     return round;
 
+  },
+  getStatus = () => {
+
+    return status;
+
   };
 
   const addPlayer = (name, client) => {
 
     for(p in players) {
 
-      players[p].client.emit('playerJoin', name);
+      players[p].client.emit('playerJoin', name, client.id);
 
     }
 
-    players[client.id] = {name: name, client: client};
+    players[client.id] = {name: name, client: client, points: 0};
 
   },
   removePlayer = (client) => {
 
     for(p in players) {
 
-      players[p].client.emit('playerLeave', players[client.id].name);
+      players[p].client.emit('playerLeave', players[client.id].name, client.id);
 
     }
 
@@ -81,6 +86,7 @@ module.exports = (code) => {
     getGameCode: getGameCode,
     getPlayers: getPlayers,
     getRound: getRound,
+    getStatus: getStatus,
     addPlayer: addPlayer,
     removePlayer: removePlayer,
     sendMessage: sendMessage,

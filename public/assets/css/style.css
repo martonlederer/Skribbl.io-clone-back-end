@@ -74,7 +74,7 @@ input::-ms-input-placeholder {
 
 }
 
-.join {
+.join, .gameManager {
 
   position: absolute;
   top: 50%;
@@ -85,14 +85,14 @@ input::-ms-input-placeholder {
 
 }
 
-.join h1 {
+.join h1, .gameManager h1 {
 
   margin: 0 0 10px 0;
   font-size: 2em;
 
 }
 
-.join h2 {
+.join h2, .gameManager h2 {
 
   text-align: center;
   font-size: 1em;
@@ -100,7 +100,7 @@ input::-ms-input-placeholder {
 
 }
 
-.join input {
+.join input, .gameManager input, .gameManager textarea {
 
   outline: none;
   border: none;
@@ -111,10 +111,11 @@ input::-ms-input-placeholder {
   display: block;
   background: transparent;
   margin-bottom: 10px;
+  width: 270px;
 
 }
 
-.join button {
+.join button, .gameManager button {
 
   display: block;
   font-size: 18px;
@@ -125,5 +126,39 @@ input::-ms-input-placeholder {
   border: none;
   cursor: pointer;
   width: -webkit-fill-available;
+
+}
+
+.game, .gameManager {
+
+  display: none;
+
+}
+
+.players {
+
+  max-height: 350px;
+  overflow-y: auto;
+
+}
+
+.players .player {
+
+  margin-bottom: 5px;
+
+}
+
+.players .player h1 {
+
+  font-size: 1.3em;
+  margin: 0;
+
+}
+
+.players .player p {
+
+  font-size: 17px;
+  margin: 0;
+  padding: 0;
 
 }

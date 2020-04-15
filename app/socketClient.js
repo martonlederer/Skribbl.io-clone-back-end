@@ -43,6 +43,12 @@ module.exports = (client) => {
 
   });
 
+  client.on('getWordsCount', (callback) => {
+
+    callback(client.Room.getWords().length);
+
+  });
+
   client.on('disconnect', () => {
 
     if(client.Room == null)

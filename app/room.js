@@ -29,6 +29,11 @@ module.exports = (code) => {
 
     return status;
 
+  },
+  getWords = () => {
+
+    return words;
+
   };
 
   const addPlayer = (name, client) => {
@@ -44,7 +49,16 @@ module.exports = (code) => {
   },
   addWord = (word) => {
 
-    words.push(word);
+    if(words.includes(word.toLowerCase()))
+      return;
+
+    words.push(word.toLowerCase());
+
+    for(p in players) {
+
+      players[p].client.emit('wordAdded', words.length);
+
+    }
 
   },
   removePlayer = (client) => {
@@ -92,6 +106,7 @@ module.exports = (code) => {
     getPlayers: getPlayers,
     getRound: getRound,
     getStatus: getStatus,
+    getWords: getWords,
     addPlayer: addPlayer,
     addWord: addWord,
     removePlayer: removePlayer,

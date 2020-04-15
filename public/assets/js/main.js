@@ -96,6 +96,12 @@ socket.on('playerLeave', (playerName, playerID) => {
 
 });
 
+socket.on('wordAdded', (count) => {
+
+  document.querySelector('.gameManager h2 span.wordsCount').innerText = count;
+
+});
+
 socket.on('startGame', () => {
 
   console.log('Starting game...');
@@ -121,6 +127,12 @@ function switchToGameManager(gameCode, players) {
     addPlayerToList(p == playerData.id ? `${players[p].name} (You)` : players[p].name, players[p].points, p, document.querySelector('.gameManager .players'));
 
   }
+
+  socket.emit('getWordsCount', (count) => {
+
+    document.querySelector('.gameManager h2 span.wordsCount').innerText = count;
+
+  });
 
 }
 

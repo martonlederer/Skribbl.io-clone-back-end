@@ -42,6 +42,11 @@ module.exports = (code) => {
     players[client.id] = {name: name, client: client, points: 0};
 
   },
+  addWord = (word) => {
+
+    words.push(word);
+
+  },
   removePlayer = (client) => {
 
     for(p in players) {
@@ -88,6 +93,7 @@ module.exports = (code) => {
     getRound: getRound,
     getStatus: getStatus,
     addPlayer: addPlayer,
+    addWord: addWord,
     removePlayer: removePlayer,
     sendMessage: sendMessage,
     startGame: startGame

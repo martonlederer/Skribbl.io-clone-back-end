@@ -33,12 +33,27 @@ module.exports = (client) => {
 
   });
 
+  client.on('addWord', (words) => {
+
+    for(let i = 0; i < words.length; i++) {
+
+      client.Room.addWord(words[i]);
+
+    }
+
+  });
+
   client.on('disconnect', () => {
 
     if(client.Room == null)
       return;
 
     client.Room.removePlayer(client);
+
+    if(Object.keys(client.Room.getPlayers()).length == 0)
+      delete rooms[client.Room.getGameCode()];
+
+    client.Room = null;
 
   });
 

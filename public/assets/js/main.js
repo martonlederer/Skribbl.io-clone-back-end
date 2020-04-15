@@ -75,7 +75,8 @@ document.querySelector('#sendMessage').addEventListener('click', () => {
 
 document.querySelector('#addWord').addEventListener('click', () => {
 
-  socket.emit('addWord', document.querySelector('#customword').value);
+  socket.emit('addWord', document.querySelector('.gameManager textarea[name=words]').value.split('\n'));
+  document.querySelector('.gameManager textarea[name=words]').value = '';
 
 });
 

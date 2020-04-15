@@ -2,9 +2,27 @@ const socket = io();
 
 document.querySelector('#joinGame').addEventListener('click', () => {
 
-  socket.emit('joinGame', document.querySelector('#name').value, document.querySelector('#gameCode').value, (success) => {
+  if(document.querySelector('.join input[name=join-nameCode]').value == null || document.querySelector('.join input[name=join-name]').value == null || document.querySelector('.join input[name=join-nameCode]').value == '' || document.querySelector('.join input[name=join-name]').value == '')
+    return;
+
+  socket.emit('joinGame', document.querySelector('.join input[name=join-name]').value, document.querySelector('.join input[name=join-nameCode]').value, (success) => {
 
     console.log(success ? 'Joined game' : 'Could not join game');
+
+  });
+
+});
+
+document.querySelector('#createGame').addEventListener('click', () => {
+
+  if(document.querySelector('.join input[name=create-name]').value == null || document.querySelector('.join input[name=create-name]').value == '')
+    return;
+
+  const gameCode = Math.floor(Math.random() * 89999999 + 10000000);
+
+  socket.emit('joinGame', document.querySelector('.join input[name=create-name]').value, gameCode, (success) => {
+
+    console.log(success ? `Created game width code: ${gameCode}` : 'Could not join game');
 
   });
 

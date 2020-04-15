@@ -19,21 +19,35 @@
 
   <body>
 
-    <h1>Join game</h1>
+    <div class="join">
 
-    <input type="text" id="gameCode" placeholder="Game code">
-    <input type="text" id="name" placeholder="Nickname">
+      <h1>Join game</h1>
 
-    <button id="joinGame">Join</button>
+      <input type="text" name="join-nameCode" placeholder="Game code">
+      <input type="text" name="join-name" placeholder="Nickname">
 
-    <h1>Chat</h1>
-    <div id="console"></div>
-    <input type="text" placeholder="Enter your message..." id="message">
-    <button id="sendMessage">Join</button>
+      <button id="joinGame">Join</button>
 
-    <h1>Add word</h1>
-    <input type="text" placeholder="Add a custom word to the game..." id="customword">
-    <button id="addWord">Join</button>
+      <h2>or</h2>
+
+      <input type="text" name="create-name" placeholder="Nickname">
+
+      <button id="createGame">Create game</button>
+
+    </div>
+
+    <div class="game">
+
+      <h1>Chat</h1>
+      <div id="console"></div>
+      <input type="text" placeholder="Enter your message..." id="message">
+      <button id="sendMessage">Join</button>
+
+      <h1>Add word</h1>
+      <input type="text" placeholder="Add a custom word to the game..." id="customword">
+      <button id="addWord">Join</button>
+
+    </div>
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="/assets/js/main.js"></script>

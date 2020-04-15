@@ -2,14 +2,14 @@ module.exports = (client) => {
 
   client.on('joinGame', (name, gameCode, callback) => {
 
-    if(client.currentGameCode != null)
-      rooms[gameCode].removePlayer(client);
+    if(client.Room != null)
+      client.Room.removePlayer(client);
 
     if(!(gameCode in rooms))
       rooms[gameCode] = room(gameCode);
 
     rooms[gameCode].addPlayer(name, client);
-    client.currentGameCode = gameCode;
+    client.Room = rooms[gameCode];
 
     callback(true);
 
@@ -17,10 +17,19 @@ module.exports = (client) => {
 
   client.on('sendMessage', (message) => {
 
-    if(client.currentGameCode == null)
+    if(client.Room == null)
       return;
 
     rooms[client.currentGameCode].sendMessage(client, message);
+
+  });
+
+  client.on('disconnect', () => {
+
+    if(client.Room == null)
+      return;
+
+    client.Room.removePlayer(client);
 
   });
 

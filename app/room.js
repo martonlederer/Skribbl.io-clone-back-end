@@ -36,9 +36,6 @@ module.exports = (code) => {
 
     players[client.id] = {name: name, client: client};
 
-    if(Object.keys(players).length == config.min_players && status == 'waiting')
-      startGame();
-
   },
   removePlayer = (client) => {
 
@@ -52,6 +49,9 @@ module.exports = (code) => {
 
   },
   startGame = () => {
+
+    if(Object.keys(players).length != config.min_players || status != 'waiting')
+      sendAnnouncement('Could not start game, not enough players');
 
     status = 'running';
     for(p in players) {
@@ -69,6 +69,11 @@ module.exports = (code) => {
 
     }
 
+  },
+  sendAnnouncement = (announcement) => {
+
+    players[p].client.emit('messageReceive', 'Announcement', announcement);
+
   };
 
   return {
@@ -77,7 +82,9 @@ module.exports = (code) => {
     getPlayers: getPlayers,
     getRound: getRound,
     addPlayer: addPlayer,
-    sendMessage: sendMessage
+    removePlayer: removePlayer,
+    sendMessage: sendMessage,
+    startGame: startGame
 
   };
 

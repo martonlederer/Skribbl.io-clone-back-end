@@ -5,7 +5,8 @@ app = express(),
 server = require('http').Server(app);
 io = require('socket.io')(server);
 config = require('./config.json'),
-room = require('./app/room.js'),
+socketClient = require('./app/socketClient'),
+room = require('./app/room'),
 rooms = {};
 
 //using public folder for get requests
@@ -20,17 +21,4 @@ server.listen(config.port, () => {
 
 });
 
-io.on('connection', (client) => {
-
-  client.on('joinGame', (name, gameCode) => {
-
-    if(!(gameCode in rooms))
-      rooms[gameCode] = room(gameCode);
-
-    rooms[gameCode].addPlayer(name, client.id);
-
-    client.emit('joinGame', true);
-
-  });
-
-});
+io.on('connection', socketClient);

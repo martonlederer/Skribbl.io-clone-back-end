@@ -3,7 +3,8 @@ const config = require('../config.json');
 module.exports = (code) => {
 
   const gameCode = code,
-  players = {};
+  players = {},
+  words = [];
 
   let round = 1,
   currentDrawer = null,
@@ -25,17 +26,48 @@ module.exports = (code) => {
 
   };
 
-  const addPlayer = (name, clientid) => {
+  const addPlayer = (name, client) => {
 
-    players[clientid] = name;
+    for(p in players) {
 
-    if(Object.keys(players).length == config.min_players)
+      players[p].client.emit('playerJoin', name);
+
+    }
+
+    players[client.id] = {name: name, client: client};
+
+    if(Object.keys(players).length == config.min_players && status == 'waiting')
       startGame();
+
+  },
+  removePlayer = (client) => {
+
+    for(p in players) {
+
+      players[p].client.emit('playerLeave', players[client.id].name);
+
+    }
+
+    delete players[client.id];
 
   },
   startGame = () => {
 
     status = 'running';
+    for(p in players) {
+
+      players[p].client.emit('startGame');
+
+    }
+
+  },
+  sendMessage = (client, message) => {
+
+    for(p in players) {
+
+      players[p].client.emit('messageReceive', players[client.id].name, message);
+
+    }
 
   };
 
@@ -44,7 +76,8 @@ module.exports = (code) => {
     getGameCode: getGameCode,
     getPlayers: getPlayers,
     getRound: getRound,
-    addPlayer: addPlayer
+    addPlayer: addPlayer,
+    sendMessage: sendMessage
 
   };
 

@@ -67,9 +67,27 @@ document.querySelector('#createGame').addEventListener('click', () => {
 
 });
 
-document.querySelector('#sendMessage').addEventListener('click', () => {
+document.querySelectorAll('.sendMessage').forEach((el) => {
 
-  socket.emit('sendMessage', document.querySelector('#message').value);
+  el.addEventListener('click', () => {
+
+    sendMessage(el.parentElement.querySelector('input[name=messageBox]'));
+
+  });
+
+});
+
+document.querySelectorAll('input[name=messageBox]').forEach((el) => {
+
+  el.addEventListener('keyup', (e) => {
+
+    if(e.keyCode !== 13)
+      return;
+
+    e.preventDefault();
+    sendMessage(el);
+
+  });
 
 });
 
@@ -77,6 +95,12 @@ document.querySelector('#addWord').addEventListener('click', () => {
 
   socket.emit('addWord', document.querySelector('.gameManager textarea[name=words]').value.split('\n'));
   document.querySelector('.gameManager textarea[name=words]').value = '';
+
+});
+
+document.querySelector('#startGame').addEventListener('click', () => {
+
+  socket.emit('startGame');
 
 });
 
@@ -143,7 +167,7 @@ function addPlayerToList(playerName, playerPoints, playerID, listEl) {
   playerPointsElement = document.createElement('p');
 
   playerElement.classList.add('player');
-  playerElement.setAttribute('playerID', playerID);
+  playerElement.setAttribute('playerid', playerID);
 
   playerNameElement.appendChild(document.createTextNode(playerName));
   playerPointsElement.appendChild(document.createTextNode(`Points: ${playerPoints}`));
@@ -155,15 +179,27 @@ function addPlayerToList(playerName, playerPoints, playerID, listEl) {
 
 function removePlayer(playerID, listEl) {
 
-  listEl.querySelector(`.player[playerID=${playerID}]`).remove();
+  listEl.querySelector(`.player[playerid=${playerID}]`).remove();
+
+}
+
+function sendMessage(el) {
+
+  socket.emit('sendMessage', el.value);
+  el.value = '';
 
 }
 
 function addChatMessage(sender, message) {
 
-  const msgEl = document.createElement('P');
-  msgEl.appendChild(document.createTextNode(`${sender}: ${message}`));
+  document.querySelectorAll('.console').forEach((consoleEl) => {
 
-  document.querySelector('#console').appendChild(msgEl);
+    const msgEl = document.createElement('P');
+
+    msgEl.appendChild(document.createTextNode(`${sender}: ${message}`));
+    consoleEl.appendChild(msgEl);
+    consoleEl.scrollTop = consoleEl.scrollHeight;
+
+  });
 
 }

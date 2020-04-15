@@ -29,7 +29,7 @@ module.exports = (client) => {
     if(client.Room == null)
       return;
 
-    rooms[client.currentGameCode].sendMessage(client, message);
+    client.Room.sendMessage(client, message);
 
   });
 
@@ -46,6 +46,12 @@ module.exports = (client) => {
   client.on('getWordsCount', (callback) => {
 
     callback(client.Room.getWords().length);
+
+  });
+
+  client.on('startGame', () => {
+
+    client.Room.startGame();
 
   });
 

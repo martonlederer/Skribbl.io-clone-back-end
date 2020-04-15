@@ -56,24 +56,6 @@ input::-ms-input-placeholder {
 
 }
 
-::-webkit-scrollbar {
-
-  width: 7px;
-
-}
-
-::-webkit-scrollbar-track {
-
-  background-color: rgba(0, 0, 0, 0);
-
-}
-
-::-webkit-scrollbar-thumb {
-
-  background: #03bafc;
-
-}
-
 .join, .gameManager {
 
   position: absolute;
@@ -118,6 +100,7 @@ input::-ms-input-placeholder {
 .join button, .gameManager button {
 
   display: block;
+  margin-bottom: 10px;
   font-size: 18px;
   color: #000;
   background-color: #F8D718;
@@ -160,5 +143,33 @@ input::-ms-input-placeholder {
   font-size: 17px;
   margin: 0;
   padding: 0;
+
+}
+
+.gameManager .container, .gameManager .chat {
+
+  display: inline-block;
+  vertical-align: top;
+
+}
+
+.gameManager .chat {
+
+  width: 200px;
+  margin-left: 10px;
+  height: 100%;
+
+}
+
+.gameManager .chat .console {
+
+  height: 220px;
+  overflow-y: auto;
+
+}
+
+.gameManager .chat input {
+
+  width: 200px;
 
 }

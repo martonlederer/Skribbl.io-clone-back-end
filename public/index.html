@@ -38,13 +38,27 @@
 
     <div class="gameManager">
 
-      <h1>Game <span class="inGameCode"></span></h1>
-      <h2>Custom words (<span class="wordsCount"></span>)</h2>
-      <textarea name="words" placeholder="Custom words (enter each one in a new line)"></textarea>
-      <button id="addWord">Add custom words</button>
+      <div class="container">
 
-      <h2>Players</h2>
-      <div class="players"></div>
+        <h1>Game <span class="inGameCode"></span></h1>
+        <h2>Custom words (<span class="wordsCount"></span>)</h2>
+        <textarea name="words" placeholder="Custom words (enter each one in a new line)"></textarea>
+        <button id="addWord">Add custom words</button>
+        <button id="startGame">Start game</button>
+
+        <h2>Players</h2>
+        <div class="players"></div>
+
+      </div>
+
+      <div class="chat">
+
+        <h1>Chat</h1>
+        <div class="console"></div>
+        <input type="text" placeholder="Enter your message..." name="messageBox">
+        <button class="sendMessage">Send message</button>
+
+      </div>
 
     </div>
 
@@ -57,9 +71,9 @@
       <div class="chat">
 
         <h1>Chat</h1>
-        <div id="console"></div>
+        <div class="console"></div>
         <input type="text" placeholder="Enter your message..." name="messageBox">
-        <button id="sendMessage">Join</button>
+        <button class="sendMessage">Send message</button>
 
       </div>
 

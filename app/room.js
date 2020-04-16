@@ -8,6 +8,8 @@ module.exports = (code) => {
 
   let round = 1,
   currentDrawer = null,
+  currentWord = null,
+  playersOrder = [],
   status = 'waiting';
 
   const getGameCode = () => {
@@ -45,6 +47,7 @@ module.exports = (code) => {
     }
 
     players[client.id] = {name: name, client: client, points: 0};
+    playersOrder.push(client.id);
 
   },
   addWord = (word) => {
@@ -72,7 +75,62 @@ module.exports = (code) => {
     delete players[client.id];
 
   },
-  startGame = () => {
+  shufflePlayers = () => {
+
+    let currentIndex = playersOrder.length,
+    temporaryValue = null,
+    randomIndex = null;
+
+    while (0 !== currentIndex) {
+
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+
+      temporaryValue = playersOrder[currentIndex];
+      playersOrder[currentIndex] = playersOrder[randomIndex];
+      playersOrder[randomIndex] = temporaryValue;
+
+    }
+
+  },
+  startDrawing = (callback) => {
+
+    players[currentPlayer].client.emit('drawWord', currentWord);
+    sendAnnouncement(`${players[currentPlayer].name} is drawing!`);
+
+    setTimeout(() => {
+
+      callback();
+
+    }, config.timeout);
+
+  },
+  startRound = async (callback) => {
+
+    shufflePlayers();
+
+    for(let i = 0; i < playersOrder.length; i++) {
+
+      currentWord = words[Math.floor(Math.random() * words.length)],
+      currentPlayer = playersOrder[0];
+
+      await startDrawing(() => {
+
+        console.log('End of drawing');
+
+        if(i == (playersOrder.length - 1)) {
+
+          console.log('Round ended');
+          callback();
+
+        }
+
+      });
+
+    }
+
+  },
+  startGame = async () => {
 
     if(Object.keys(players).length != config.min_players || status != 'waiting') {
 
@@ -96,6 +154,19 @@ module.exports = (code) => {
 
     }
 
+    for(let i = 0; i < config.rounds; i++) {
+
+      round = i + 1;
+
+      await startRound(() => {
+
+        if(round == config.rounds)
+          console.log('game ended');
+
+      });
+
+    }
+
   },
   sendMessage = (client, message) => {
 
@@ -111,7 +182,11 @@ module.exports = (code) => {
   },
   sendAnnouncement = (announcement) => {
 
-    players[p].client.emit('messageReceive', 'Announcement', announcement);
+    for(p in players) {
+
+      players[p].client.emit('messageReceive', 'Announcement', announcement);
+
+    }
 
   };
 

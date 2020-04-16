@@ -35,6 +35,9 @@ module.exports = (client) => {
 
   client.on('addWord', (words) => {
 
+    if(client.Room == null)
+      return;
+
     for(let i = 0; i < words.length; i++) {
 
       client.Room.addWord(words[i]);
@@ -45,11 +48,17 @@ module.exports = (client) => {
 
   client.on('getWordsCount', (callback) => {
 
+    if(client.Room == null)
+      return;
+
     callback(client.Room.getWords().length);
 
   });
 
   client.on('startGame', () => {
+
+    if(client.Room == null)
+      return;
 
     client.Room.startGame();
 

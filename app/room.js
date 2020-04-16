@@ -93,18 +93,6 @@ module.exports = (code) => {
     }
 
   },
-  startDrawing = (callback) => {
-
-    players[currentPlayer].client.emit('drawWord', currentWord);
-    sendAnnouncement(`${players[currentPlayer].name} is drawing!`);
-
-    setTimeout(() => {
-
-      callback();
-
-    }, config.timeout);
-
-  },
   startRound = async (callback) => {
 
     shufflePlayers();
@@ -112,25 +100,42 @@ module.exports = (code) => {
     for(let i = 0; i < playersOrder.length; i++) {
 
       currentWord = words[Math.floor(Math.random() * words.length)],
-      currentPlayer = playersOrder[0];
+      currentDrawer = playersOrder[i];
 
-      await startDrawing(() => {
+      let startDrawing = new Promise((resolve, reject) => {
 
-        console.log('End of drawing');
+        players[currentDrawer].client.emit('drawWord', currentWord);
+        sendAnnouncement(`${players[currentDrawer].name} is drawing!`);
 
-        if(i == (playersOrder.length - 1)) {
+        setTimeout(() => {
 
-          console.log('Round ended');
-          callback();
+          //we'll send the winner from here later, for now it's just 1
+          resolve(1);
+
+        }, config.timeout);
+
+      }),
+      drawingResult = await startDrawing;
+
+      if(i == (playersOrder.length - 1)) {
+
+        if(round == config.rounds) {
+
+          sendAnnouncement(`Game ended!`);
+          return;
 
         }
 
-      });
+        sendAnnouncement(`Round ${round} ended!`);
+        round++;
+        startRound();
+
+      }
 
     }
 
   },
-  startGame = async () => {
+  startGame = () => {
 
     if(Object.keys(players).length != config.min_players || status != 'waiting') {
 
@@ -154,18 +159,7 @@ module.exports = (code) => {
 
     }
 
-    for(let i = 0; i < config.rounds; i++) {
-
-      round = i + 1;
-
-      await startRound(() => {
-
-        if(round == config.rounds)
-          console.log('game ended');
-
-      });
-
-    }
+    startRound();
 
   },
   sendMessage = (client, message) => {

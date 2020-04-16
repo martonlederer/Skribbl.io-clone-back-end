@@ -74,16 +74,25 @@ module.exports = (code) => {
   },
   startGame = () => {
 
-    if(Object.keys(players).length != config.min_players || status != 'waiting')
-      sendAnnouncement(`Could not start game, not enough players (minimum ${config.min_players})`);
+    if(Object.keys(players).length != config.min_players || status != 'waiting') {
 
-    if(words.length < config.min_words)
+      sendAnnouncement(`Could not start game, not enough players (minimum ${config.min_players})`);
+      return;
+
+    }
+
+    if(words.length < config.min_words) {
+
       sendAnnouncement(`Could not start game, not enough words (minimum ${config.min_words})`);
+      return;
+
+    }
 
     status = 'running';
     for(p in players) {
 
       players[p].client.emit('startGame');
+      players[p].client.emit('statusChange', status);
 
     }
 

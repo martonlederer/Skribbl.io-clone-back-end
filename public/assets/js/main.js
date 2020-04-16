@@ -1,6 +1,6 @@
 const socket = io();
 
-let gameStatus = '',
+let gameStatus = null,
 playerData = {};
 
 document.querySelector('#joinGame').addEventListener('click', () => {
@@ -27,7 +27,7 @@ document.querySelector('#joinGame').addEventListener('click', () => {
 
     }else {
 
-      //TODO: switch to game directly
+      switchToGame(gameCode, players);
 
     }
 
@@ -59,7 +59,7 @@ document.querySelector('#createGame').addEventListener('click', () => {
 
     }else {
 
-      //TODO: switch to game directly
+      switchToGame(gameCode, players);
 
     }
 
@@ -131,6 +131,14 @@ socket.on('startGame', () => {
   console.log('Starting game...');
   addChatMessage('Announcement', 'Starting game...');
 
+  switchToGame();
+
+});
+
+socket.on('statusChange', (status) => {
+
+  gameStatus = status;
+
 });
 
 socket.on('messageReceive', (name, message) => {
@@ -157,6 +165,28 @@ function switchToGameManager(gameCode, players) {
     document.querySelector('.gameManager h2 span.wordsCount').innerText = count;
 
   });
+
+}
+
+function switchToGame(gameCode, players) {
+
+  document.querySelector('.join').style.display = 'none';
+  document.querySelector('.gameManager').style.display = 'none';
+  document.querySelector('.game').style.display = 'block';
+
+  if(gameCode == null && players == null) {
+
+    document.querySelector('.game .players').innerHTML = document.querySelector('.gameManager .players').innerHTML;
+
+  }else {
+
+    for(p in players) {
+
+      addPlayerToList(p == playerData.id ? `${players[p].name} (You)` : players[p].name, players[p].points, p, document.querySelector('.game .players'));
+
+    }
+
+  }
 
 }
 

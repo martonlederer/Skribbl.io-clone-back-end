@@ -7,6 +7,7 @@ module.exports = (code) => {
   words = [];
 
   let round = 1,
+  rounds = 10,
   currentDrawer = null,
   currentWord = null,
   playersOrder = [],
@@ -35,6 +36,11 @@ module.exports = (code) => {
   getWords = () => {
 
     return words;
+
+  },
+  getRounds = () => {
+
+    return rounds;
 
   };
 
@@ -73,6 +79,17 @@ module.exports = (code) => {
     }
 
     delete players[client.id];
+
+  },
+  updateRoundNumber = (n) => {
+
+    rounds = n;
+
+    for(p in players) {
+
+      players[p].client.emit('roundNumberChangeClient', rounds);
+
+    }
 
   },
   shufflePlayers = () => {
@@ -119,7 +136,7 @@ module.exports = (code) => {
 
       if(i == (playersOrder.length - 1)) {
 
-        if(round == config.rounds) {
+        if(round == rounds) {
 
           sendAnnouncement(`Game ended!`);
           return;
@@ -191,6 +208,8 @@ module.exports = (code) => {
     getRound: getRound,
     getStatus: getStatus,
     getWords: getWords,
+    getRounds: getRounds,
+    updateRoundNumber: updateRoundNumber,
     addPlayer: addPlayer,
     addWord: addWord,
     removePlayer: removePlayer,

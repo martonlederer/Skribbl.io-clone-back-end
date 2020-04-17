@@ -82,7 +82,7 @@ input::-ms-input-placeholder {
 
 }
 
-.join input, .gameManager input, .gameManager textarea {
+input, textarea {
 
   outline: none;
   border: none;
@@ -97,7 +97,7 @@ input::-ms-input-placeholder {
 
 }
 
-.join button, .gameManager button {
+button {
 
   display: block;
   margin-bottom: 10px;
@@ -153,7 +153,7 @@ input::-ms-input-placeholder {
 
 }
 
-.gameManager .chat {
+.gameManager .chat, .game .chat {
 
   width: 200px;
   margin-left: 10px;
@@ -161,15 +161,63 @@ input::-ms-input-placeholder {
 
 }
 
-.gameManager .chat .console {
+.gameManager .chat .console, .game .chat .console {
 
   height: 220px;
   overflow-y: auto;
 
 }
 
-.gameManager .chat input {
+.gameManager .chat input, .game .chat input {
 
+  width: 200px;
+
+}
+
+.game {
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 82vw;
+  height: 85vh;
+  transform: translate(-50%, -50%);
+
+}
+
+.game .chat {
+
+  position: absolute;
+  right: 0;
+  top: 0;
+  background-color: #03bafc;
+  height: auto;
+  padding: 4px;
+
+}
+
+.game .draw-container {
+
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+
+}
+
+.game .draw-container canvas {
+
+  background-color: #fff;
+
+}
+
+.game .players {
+
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-color: #03bafc;
+  padding: 4px;
   width: 200px;
 
 }

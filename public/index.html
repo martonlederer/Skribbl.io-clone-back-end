@@ -44,6 +44,7 @@
         <h2>Custom words (<span class="wordsCount"></span>)</h2>
         <textarea name="words" placeholder="Custom words (enter each one in a new line)"></textarea>
         <button id="addWord">Add custom words</button>
+        <input type="number" id="rounds" value="10">
         <button id="startGame">Start game</button>
 
         <h2>Players</h2>
@@ -66,7 +67,11 @@
 
       <div class="players"></div>
 
-      <canvas id="drawBoard" width="300" height="300"></canvas>
+      <div class="draw-container">
+
+        <canvas id="drawBoard" width="300" height="300"></canvas>
+
+      </div>
 
       <div class="chat">
 

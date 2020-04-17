@@ -104,6 +104,12 @@ document.querySelector('#startGame').addEventListener('click', () => {
 
 });
 
+document.querySelector('#rounds').addEventListener('change', (e) => {
+
+  socket.emit('roundNumberChange', e.target.value);
+
+});
+
 socket.on('playerJoin', (playerName, playerID) => {
 
   console.log(`${playerName} joined the game.`);
@@ -144,6 +150,12 @@ socket.on('statusChange', (status) => {
 socket.on('messageReceive', (name, message) => {
 
   addChatMessage(name, message);
+
+});
+
+socket.on('roundNumberChangeClient', (rounds) => {
+
+  document.querySelector('#rounds').value = rounds;
 
 });
 

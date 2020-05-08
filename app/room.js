@@ -169,6 +169,7 @@ module.exports = (code) => {
     }
 
     status = 'running'
+
     for(p in players) {
 
       players[p].client.emit('startGame')

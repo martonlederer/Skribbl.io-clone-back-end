@@ -3,16 +3,16 @@ module.exports = (client) => {
   client.on('joinGame', (name, gameCode, callback) => {
 
     if(client.Room != null)
-      client.Room.removePlayer(client);
+      client.Room.removePlayer(client)
 
     if(!(gameCode in rooms))
-      rooms[gameCode] = room(gameCode);
+      rooms[gameCode] = room(gameCode)
 
-    rooms[gameCode].addPlayer(name, client);
-    client.Room = rooms[gameCode];
+    rooms[gameCode].addPlayer(name, client)
+    client.Room = rooms[gameCode]
 
     //removing client
-    const safePlayers = {};
+    const safePlayers = {}
 
     for(p in client.Room.getPlayers()) {
 
@@ -20,71 +20,71 @@ module.exports = (client) => {
 
     }
 
-    callback(true, safePlayers, client.Room.getStatus(), client.id);
+    callback(true, safePlayers, client.Room.getStatus(), client.id)
 
-  });
+  })
 
   client.on('sendMessage', (message) => {
 
     if(client.Room == null)
-      return;
+      return
 
-    client.Room.sendMessage(client, message);
+    client.Room.sendMessage(client, message)
 
-  });
+  })
 
   client.on('addWord', (words) => {
 
     if(client.Room == null)
-      return;
+      return
 
     for(let i = 0; i < words.length; i++) {
 
-      client.Room.addWord(words[i]);
+      client.Room.addWord(words[i])
 
     }
 
-  });
+  })
 
   client.on('roundNumberChange', (rounds) => {
 
     if(client.Room == null)
-      return;
+      return
 
-    client.Room.updateRoundNumber(rounds);
+    client.Room.updateRoundNumber(rounds)
 
-  });
+  })
 
   client.on('getWordsCount', (callback) => {
 
     if(client.Room == null)
-      return;
+      return
 
-    callback(client.Room.getWords().length);
+    callback(client.Room.getWords().length)
 
-  });
+  })
 
   client.on('startGame', () => {
 
     if(client.Room == null)
-      return;
+      return
 
-    client.Room.startGame();
+    client.Room.startGame()
 
-  });
+  })
 
   client.on('disconnect', () => {
 
     if(client.Room == null)
-      return;
+      return
 
-    client.Room.removePlayer(client);
+    client.Room.removePlayer(client)
 
     if(Object.keys(client.Room.getPlayers()).length == 0)
-      delete rooms[client.Room.getGameCode()];
+      delete rooms[client.Room.getGameCode()]
 
-    client.Room = null;
+    client.Room = null
 
-  });
+  })
 
-};
+}

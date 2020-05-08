@@ -4,14 +4,14 @@ module.exports = (code) => {
 
   const gameCode = code,
   players = {},
-  words = [];
+  words = []
 
   let round = 1,
   rounds = 10,
   currentDrawer = null,
   currentWord = null,
   playersOrder = [],
-  status = 'waiting';
+  status = 'waiting'
 
   const getGameCode = () => {
 
@@ -20,52 +20,52 @@ module.exports = (code) => {
   },
   getPlayers = () => {
 
-    return players;
+    return players
 
   },
   getRound = () => {
 
-    return round;
+    return round
 
   },
   getStatus = () => {
 
-    return status;
+    return status
 
   },
   getWords = () => {
 
-    return words;
+    return words
 
   },
   getRounds = () => {
 
-    return rounds;
+    return rounds
 
   };
 
   const addPlayer = (name, client) => {
 
+    players[client.id] = { name: name, client: client, points: 0 }
+    playersOrder.push(client.id)
+
     for(p in players) {
 
-      players[p].client.emit('playerJoin', name, client.id);
+      players[p].client.emit('playerJoin', name, client.id)
 
     }
-
-    players[client.id] = {name: name, client: client, points: 0};
-    playersOrder.push(client.id);
 
   },
   addWord = (word) => {
 
     if(words.includes(word.toLowerCase()))
-      return;
+      return
 
     words.push(word.toLowerCase());
 
     for(p in players) {
 
-      players[p].client.emit('wordAdded', words.length);
+      players[p].client.emit('wordAdded', words.length)
 
     }
 
@@ -74,20 +74,20 @@ module.exports = (code) => {
 
     for(p in players) {
 
-      players[p].client.emit('playerLeave', players[client.id].name, client.id);
+      players[p].client.emit('playerLeave', players[client.id].name, client.id)
 
     }
 
-    delete players[client.id];
+    delete players[client.id]
 
   },
   updateRoundNumber = (n) => {
 
-    rounds = n;
+    rounds = n
 
     for(p in players) {
 
-      players[p].client.emit('roundNumberChangeClient', rounds);
+      players[p].client.emit('roundNumberChangeClient', rounds)
 
     }
 
@@ -96,56 +96,56 @@ module.exports = (code) => {
 
     let currentIndex = playersOrder.length,
     temporaryValue = null,
-    randomIndex = null;
+    randomIndex = null
 
     while (0 !== currentIndex) {
 
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex -= 1;
+      randomIndex = Math.floor(Math.random() * currentIndex)
+      currentIndex -= 1
 
-      temporaryValue = playersOrder[currentIndex];
-      playersOrder[currentIndex] = playersOrder[randomIndex];
-      playersOrder[randomIndex] = temporaryValue;
+      temporaryValue = playersOrder[currentIndex]
+      playersOrder[currentIndex] = playersOrder[randomIndex]
+      playersOrder[randomIndex] = temporaryValue
 
     }
 
   },
   startRound = async (callback) => {
 
-    shufflePlayers();
+    shufflePlayers()
 
     for(let i = 0; i < playersOrder.length; i++) {
 
       currentWord = words[Math.floor(Math.random() * words.length)],
-      currentDrawer = playersOrder[i];
+      currentDrawer = playersOrder[i]
 
       let startDrawing = new Promise((resolve, reject) => {
 
-        players[currentDrawer].client.emit('drawWord', currentWord);
-        sendAnnouncement(`${players[currentDrawer].name} is drawing!`);
+        players[currentDrawer].client.emit('drawWord', currentWord)
+        sendAnnouncement(`${players[currentDrawer].name} is drawing!`)
 
         setTimeout(() => {
 
           //we'll send the winner from here later, for now it's just 1
-          resolve(1);
+          resolve(1)
 
-        }, config.timeout);
+        }, config.timeout)
 
       }),
-      drawingResult = await startDrawing;
+      drawingResult = await startDrawing
 
       if(i == (playersOrder.length - 1)) {
 
         if(round == rounds) {
 
-          sendAnnouncement(`Game ended!`);
-          return;
+          sendAnnouncement(`Game ended!`)
+          return
 
         }
 
-        sendAnnouncement(`Round ${round} ended!`);
-        round++;
-        startRound();
+        sendAnnouncement(`Round ${round} ended!`)
+        round++
+        startRound()
 
       }
 
@@ -156,37 +156,37 @@ module.exports = (code) => {
 
     if(Object.keys(players).length != config.min_players || status != 'waiting') {
 
-      sendAnnouncement(`Could not start game, not enough players (minimum ${config.min_players})`);
-      return;
+      sendAnnouncement(`Could not start game, not enough players (minimum ${config.min_players})`)
+      return
 
     }
 
     if(words.length < config.min_words) {
 
-      sendAnnouncement(`Could not start game, not enough words (minimum ${config.min_words})`);
-      return;
+      sendAnnouncement(`Could not start game, not enough words (minimum ${config.min_words})`)
+      return
 
     }
 
-    status = 'running';
+    status = 'running'
     for(p in players) {
 
-      players[p].client.emit('startGame');
-      players[p].client.emit('statusChange', status);
+      players[p].client.emit('startGame')
+      players[p].client.emit('statusChange', status)
 
     }
 
-    startRound();
+    startRound()
 
   },
   sendMessage = (client, message) => {
 
     if(message == null || message == '')
-      return;
+      return
 
     for(p in players) {
 
-      players[p].client.emit('messageReceive', players[client.id].name, message);
+      players[p].client.emit('messageReceive', players[client.id].name, message)
 
     }
 
@@ -195,11 +195,11 @@ module.exports = (code) => {
 
     for(p in players) {
 
-      players[p].client.emit('messageReceive', 'Announcement', announcement);
+      players[p].client.emit('messageReceive', 'Announcement', announcement)
 
     }
 
-  };
+  }
 
   return {
 
@@ -216,6 +216,6 @@ module.exports = (code) => {
     sendMessage: sendMessage,
     startGame: startGame
 
-  };
+  }
 
-};
+}

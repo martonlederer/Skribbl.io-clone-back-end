@@ -1,4 +1,10 @@
-# Skribble.io clone
-A very simple skribble.io clone in Node.js
+# Skribbl.io clone back-end
+A very simple skribbl.io clone in React and Node-express-socketio
 
-I was bored so I made this
+
+This is the back-end, the front end is here: https://github.com/MartonDev/Skribbl.io-clone-front-end
+
+## Interact
+``` bash
+# run the back-end
+node app.js

@@ -55,6 +55,8 @@ module.exports = (code) => {
 
     }
 
+    sendAnnouncement(`${name} joined the game`)
+
   },
   addWord = (word) => {
 
@@ -77,6 +79,8 @@ module.exports = (code) => {
       players[p].client.emit('playerLeave', players[client.id].name, client.id)
 
     }
+
+    sendAnnouncement(`${players[client.id].name} left the game`)
 
     delete players[client.id]
 

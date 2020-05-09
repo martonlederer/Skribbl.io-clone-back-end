@@ -20,7 +20,7 @@ module.exports = (client) => {
 
     }
 
-    callback(true, safePlayers, client.Room.getStatus(), client.id)
+    callback(true, safePlayers, client.Room.getStatus(), client.id, client.Room.getWords().length)
 
   })
 

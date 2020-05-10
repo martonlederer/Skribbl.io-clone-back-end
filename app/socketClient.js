@@ -73,6 +73,18 @@ module.exports = (client) => {
 
   })
 
+  client.on('drawingData', lines => {
+
+    if(client.Room == null)
+      return
+
+    if(client.id != client.Room.getCurrentDrawer())
+      return
+
+    client.Room.handleDrawingData(lines)
+
+  })
+
   client.on('disconnect', () => {
 
     if(client.Room == null)

@@ -10,8 +10,10 @@ module.exports = (code) => {
   rounds = 10,
   currentDrawer = null,
   currentWord = null,
+  currentWordHelp = null,
   playersOrder = [],
-  status = 'waiting'
+  status = 'waiting',
+  drawingData = []
 
   const getGameCode = () => {
 
@@ -42,7 +44,12 @@ module.exports = (code) => {
 
     return rounds
 
-  };
+  },
+  getCurrentDrawer = () => {
+
+    return currentDrawer
+
+  }
 
   const addPlayer = (name, client) => {
 
@@ -121,11 +128,31 @@ module.exports = (code) => {
     for(let i = 0; i < playersOrder.length; i++) {
 
       currentWord = words[Math.floor(Math.random() * words.length)],
+      currentWordHelp = '',
       currentDrawer = playersOrder[i]
+      drawingData = []
+
+      for(p in players) players[p].client.emit('receiveDrawingData', drawingData)
+
+      for(let j = 0; j < currentWord.length; j++) currentWordHelp += '_'
 
       let startDrawing = new Promise((resolve, reject) => {
 
-        players[currentDrawer].client.emit('drawWord', currentWord)
+        for(p in players) {
+
+          players[p].client.emit('currentDrawer', currentDrawer)
+
+          if(p == currentDrawer) {
+
+            players[p].client.emit('drawWord', currentWord)
+            continue
+
+          }
+
+          players[p].client.emit('drawWord', currentWordHelp)
+
+        }
+
         sendAnnouncement(`${players[currentDrawer].name} is drawing!`)
 
         setTimeout(() => {
@@ -184,6 +211,20 @@ module.exports = (code) => {
     startRound()
 
   },
+  handleDrawingData = (lines) => {
+
+    drawingData = lines
+
+    for(p in players) {
+
+      if(p == currentDrawer)
+        continue
+
+      players[p].client.emit('receiveDrawingData', drawingData)
+
+    }
+
+  },
   sendMessage = (client, message) => {
 
     if(message == null || message == '')
@@ -214,12 +255,14 @@ module.exports = (code) => {
     getStatus: getStatus,
     getWords: getWords,
     getRounds: getRounds,
+    getCurrentDrawer: getCurrentDrawer,
     updateRoundNumber: updateRoundNumber,
     addPlayer: addPlayer,
     addWord: addWord,
     removePlayer: removePlayer,
     sendMessage: sendMessage,
-    startGame: startGame
+    startGame: startGame,
+    handleDrawingData: handleDrawingData
 
   }
 

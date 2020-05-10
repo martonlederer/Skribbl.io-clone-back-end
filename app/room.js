@@ -132,6 +132,8 @@ module.exports = (code) => {
       currentDrawer = playersOrder[i]
       drawingData = []
 
+      sendAnnouncement(`${players[currentDrawer].name} is drawing!`)
+
       for(p in players) players[p].client.emit('receiveDrawingData', drawingData)
 
       for(let j = 0; j < currentWord.length; j++) currentWordHelp += '_'
@@ -152,8 +154,6 @@ module.exports = (code) => {
           players[p].client.emit('drawWord', currentWordHelp)
 
         }
-
-        sendAnnouncement(`${players[currentDrawer].name} is drawing!`)
 
         setTimeout(() => {
 
@@ -211,16 +211,16 @@ module.exports = (code) => {
     startRound()
 
   },
-  handleDrawingData = (lines) => {
+  handleDrawingData = (newLine) => {
 
-    drawingData = lines
+    drawingData = newLine
 
     for(p in players) {
 
       if(p == currentDrawer)
         continue
 
-      players[p].client.emit('receiveDrawingData', drawingData)
+      players[p].client.emit('receiveDrawingData', newLine)
 
     }
 

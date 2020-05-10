@@ -73,7 +73,7 @@ module.exports = (client) => {
 
   })
 
-  client.on('drawingData', lines => {
+  client.on('drawingData', newLine => {
 
     if(client.Room == null)
       return
@@ -81,7 +81,7 @@ module.exports = (client) => {
     if(client.id != client.Room.getCurrentDrawer())
       return
 
-    client.Room.handleDrawingData(lines)
+    client.Room.handleDrawingData(newLine)
 
   })
 

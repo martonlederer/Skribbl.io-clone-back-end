@@ -3,6 +3,7 @@
   "port": 8000,
   "min_players": 2,
   "min_words": 2,
-  "timeout": 30000
+  "timeout": 30000,
+  "rounds": 10
 
 }

@@ -7,7 +7,7 @@ module.exports = (code) => {
   words = []
 
   let round = 1,
-  rounds = 10,
+  rounds = config.rounds,
   currentDrawer = null,
   currentWord = null,
   currentWordHelp = null,
@@ -203,7 +203,7 @@ module.exports = (code) => {
 
     for(p in players) {
 
-      players[p].client.emit('startGame')
+      players[p].client.emit('startGame', rounds, config.timeout)
       players[p].client.emit('statusChange', status)
 
     }

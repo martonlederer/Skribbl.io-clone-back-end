@@ -13,7 +13,8 @@ module.exports = (code) => {
   currentWordHelp = null,
   playersOrder = [],
   status = 'waiting',
-  drawingData = []
+  drawingData = [],
+  backgroundColor = '#fff'
 
   const getGameCode = () => {
 
@@ -131,8 +132,9 @@ module.exports = (code) => {
       currentWordHelp = '',
       currentDrawer = playersOrder[i]
       drawingData = []
+      backgroundColor = '#fff'
 
-      sendAnnouncement(`${players[currentDrawer].name} is drawing!`)
+      sendAnnouncement(`${players[playersOrder[i]].name} is drawing!`)
 
       for(p in players) players[p].client.emit('receiveDrawingData', drawingData)
 
@@ -220,7 +222,21 @@ module.exports = (code) => {
       if(p == currentDrawer)
         continue
 
-      players[p].client.emit('receiveDrawingData', newLine)
+      players[p].client.emit('receiveDrawingData', drawingData)
+
+    }
+
+  },
+  handleBackgroundColorChange = (bgColor) => {
+
+    backgroundColor = bgColor
+
+    for(p in players) {
+
+      if(p == currentDrawer)
+        continue
+
+      players[p].client.emit('receiveBackgroundData', backgroundColor)
 
     }
 
@@ -262,7 +278,8 @@ module.exports = (code) => {
     removePlayer: removePlayer,
     sendMessage: sendMessage,
     startGame: startGame,
-    handleDrawingData: handleDrawingData
+    handleDrawingData: handleDrawingData,
+    handleBackgroundColorChange: handleBackgroundColorChange
 
   }
 

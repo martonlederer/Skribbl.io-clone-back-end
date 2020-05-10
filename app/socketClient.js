@@ -85,6 +85,18 @@ module.exports = (client) => {
 
   })
 
+  client.on('backgroundColorChange', bgColor => {
+
+    if(client.Room == null)
+      return
+
+    if(client.id != client.Room.getCurrentDrawer())
+      return
+
+    client.Room.handleBackgroundColorChange(bgColor)
+
+  })
+
   client.on('disconnect', () => {
 
     if(client.Room == null)

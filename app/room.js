@@ -14,7 +14,8 @@ module.exports = (code) => {
   playersOrder = [],
   status = 'waiting',
   drawingData = [],
-  backgroundColor = '#fff'
+  backgroundColor = '#fff',
+  timeLeft = 0
 
   const getGameCode = () => {
 
@@ -54,7 +55,7 @@ module.exports = (code) => {
 
   const addPlayer = (name, client) => {
 
-    players[client.id] = { name: name, client: client, points: 0 }
+    players[client.id] = { name: name, client: client, points: 0, didGuessWord: false }
     playersOrder.push(client.id)
 
     for(p in players) {
@@ -146,9 +147,18 @@ module.exports = (code) => {
 
       let startDrawing = new Promise((resolve, reject) => {
 
+        timeLeft = (config.timeout / 1000)
+
+        let timeLeftCounter = setInterval(() => {
+
+          timeLeft--
+
+        }, 1000)
+
         for(p in players) {
 
           players[p].client.emit('currentDrawer', currentDrawer)
+          players[p].didGuessWord = false
 
           if(p == currentDrawer) {
 
@@ -163,6 +173,7 @@ module.exports = (code) => {
 
         setTimeout(() => {
 
+          clearInterval(timeLeftCounter)
           //we'll send the winner from here later, for now it's just 1
           resolve(1)
 
@@ -261,6 +272,29 @@ module.exports = (code) => {
 
     if(message == null || message == '')
       return
+
+    if(message.toLowerCase().replace(/\s/g, '') == currentWord.toLowerCase().replace(/\s/g, '') && status == 'running') {
+
+      if(!players[client.id].didGuessWord && client.id != currentDrawer) {
+
+        //max points + is config.timeout * 10
+
+        players[client.id].didGuessWord = true
+        players[client.id].points += (timeLeft * 10)
+
+        sendAnnouncement(`${players[client.id].name} guessed the word!`)
+
+        for(p in players) {
+
+          players[p].client.emit('pointsUpdate', client.id, players[client.id].points)
+
+        }
+
+      }
+
+      return
+
+    }
 
     for(p in players) {
 

@@ -15,7 +15,29 @@ module.exports = (code) => {
   status = 'waiting',
   drawingData = [],
   backgroundColor = '#fff',
-  timeLeft = 0
+  timeLeft = 0,
+  guessed = {
+
+    allInternal: 0,
+    allListener: function(val) {},
+    set all(val) {
+
+      this.allInternal = val
+      this.allListener(val)
+
+    },
+    get all() {
+
+      return this.allInternal
+
+    },
+    registerListener: function(listener) {
+
+      this.allListener = listener
+
+    }
+
+  }
 
   const getGameCode = () => {
 
@@ -95,17 +117,6 @@ module.exports = (code) => {
     playersOrder.splice(playersOrder.indexOf(client.id), 1)
 
   },
-  updateRoundNumber = (n) => {
-
-    rounds = n
-
-    for(p in players) {
-
-      players[p].client.emit('roundNumberChangeClient', rounds)
-
-    }
-
-  },
   shufflePlayers = () => {
 
     let currentIndex = playersOrder.length,
@@ -127,6 +138,12 @@ module.exports = (code) => {
   startRound = async () => {
 
     shufflePlayers()
+
+    for(p in players) {
+
+      players[p].client.emit('roundNumberChange', round)
+
+    }
 
     for(let i = 0; i < playersOrder.length; i++) {
 
@@ -155,6 +172,43 @@ module.exports = (code) => {
 
         }, 1000)
 
+        const finishDrawing = () => {
+
+          if(playersOrder.length == 0)
+            return
+
+          clearInterval(timeLeftCounter)
+
+          let drawerPoints = 0
+
+          for(p in players) {
+
+            if(players[p].didGuessWord)
+              drawerPoints += 10
+
+          }
+
+          players[currentDrawer].points += drawerPoints
+
+          for(p in players) {
+
+            players[p].client.emit('pointsUpdate', currentDrawer, players[currentDrawer].points)
+
+          }
+
+          //we'll send the winner from here later, for now it's just 1
+          resolve(1)
+
+        }
+
+        guessed.all = 0
+        guessed.registerListener(function(val) {
+
+          if(val == (playersOrder.length - 1))
+            finishDrawing()
+
+        })
+
         for(p in players) {
 
           players[p].client.emit('currentDrawer', currentDrawer)
@@ -173,9 +227,7 @@ module.exports = (code) => {
 
         setTimeout(() => {
 
-          clearInterval(timeLeftCounter)
-          //we'll send the winner from here later, for now it's just 1
-          resolve(1)
+          finishDrawing()
 
         }, config.timeout)
 
@@ -281,6 +333,7 @@ module.exports = (code) => {
 
         players[client.id].didGuessWord = true
         players[client.id].points += (timeLeft * 10)
+        guessed.all++
 
         sendAnnouncement(`${players[client.id].name} guessed the word!`)
 
@@ -322,7 +375,6 @@ module.exports = (code) => {
     getWords: getWords,
     getRounds: getRounds,
     getCurrentDrawer: getCurrentDrawer,
-    updateRoundNumber: updateRoundNumber,
     addPlayer: addPlayer,
     addWord: addWord,
     removePlayer: removePlayer,

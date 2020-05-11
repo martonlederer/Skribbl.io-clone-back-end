@@ -46,15 +46,6 @@ module.exports = (client) => {
 
   })
 
-  client.on('roundNumberChange', (rounds) => {
-
-    if(client.Room == null)
-      return
-
-    client.Room.updateRoundNumber(rounds)
-
-  })
-
   client.on('getWordsCount', (callback) => {
 
     if(client.Room == null)

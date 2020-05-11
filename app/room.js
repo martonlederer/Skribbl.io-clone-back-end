@@ -91,6 +91,7 @@ module.exports = (code) => {
     sendAnnouncement(`${players[client.id].name} left the game`)
 
     delete players[client.id]
+    playersOrder.splice(playersOrder.indexOf(client.id), 1)
 
   },
   updateRoundNumber = (n) => {
@@ -122,11 +123,14 @@ module.exports = (code) => {
     }
 
   },
-  startRound = async (callback) => {
+  startRound = async () => {
 
     shufflePlayers()
 
     for(let i = 0; i < playersOrder.length; i++) {
+
+      if(playersOrder.length == 0)
+        return
 
       currentWord = words[Math.floor(Math.random() * words.length)],
       currentWordHelp = '',
@@ -241,6 +245,18 @@ module.exports = (code) => {
     }
 
   },
+  erease = (offsetX, offsetY) => {
+
+    for(p in players) {
+
+      if(p == currentDrawer)
+        continue
+
+      players[p].client.emit('receiveRubber', offsetX, offsetY)
+
+    }
+
+  },
   sendMessage = (client, message) => {
 
     if(message == null || message == '')
@@ -279,7 +295,8 @@ module.exports = (code) => {
     sendMessage: sendMessage,
     startGame: startGame,
     handleDrawingData: handleDrawingData,
-    handleBackgroundColorChange: handleBackgroundColorChange
+    handleBackgroundColorChange: handleBackgroundColorChange,
+    erease: erease
 
   }
 

@@ -97,6 +97,18 @@ module.exports = (client) => {
 
   })
 
+  client.on('rubber', (offsetX, offsetY) => {
+
+    if(client.Room == null)
+      return
+
+    if(client.id != client.Room.getCurrentDrawer())
+      return
+
+    client.Room.erease(offsetX, offsetY)
+
+  })
+
   client.on('disconnect', () => {
 
     if(client.Room == null)

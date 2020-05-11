@@ -196,7 +196,6 @@ module.exports = (code) => {
 
           }
 
-          //we'll send the winner from here later, for now it's just 1
           resolve(1)
 
         }
@@ -239,6 +238,13 @@ module.exports = (code) => {
         if(round == rounds) {
 
           sendAnnouncement(`Game ended!`)
+
+          for(p in players) {
+
+            players[p].client.emit('endGame')
+
+          }
+
           return
 
         }

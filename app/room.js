@@ -351,7 +351,7 @@ module.exports = (code) => {
     if(message == null || message == '')
       return
 
-    if(message.toLowerCase().replace(/\s/g, '') == currentWord.toLowerCase().replace(/\s/g, '') && status == 'running') {
+    if(currentWord != null && message.toLowerCase().replace(/\s/g, '') == currentWord.toLowerCase().replace(/\s/g, '') && status == 'running') {
 
       if(!players[client.id].didGuessWord && client.id != currentDrawer) {
 

@@ -286,7 +286,7 @@ module.exports = (code) => {
     startRound()
 
   },
-  handleDrawingData = (newLine) => {
+  handleDrawingData = (newLine, canvasWidth) => {
 
     drawingData = newLine
 
@@ -295,7 +295,7 @@ module.exports = (code) => {
       if(p == currentDrawer)
         continue
 
-      players[p].client.emit('receiveDrawingData', drawingData)
+      players[p].client.emit('receiveDrawingData', drawingData, canvasWidth)
 
     }
 

@@ -280,7 +280,7 @@ module.exports = (code) => {
   },
   startGame = () => {
 
-    if(Object.keys(players).length >= config.min_players || status != 'waiting') {
+    if(Object.keys(players).length < config.min_players || status != 'waiting') {
 
       sendAnnouncement(`Could not start game, not enough players (minimum ${config.min_players})`)
       return

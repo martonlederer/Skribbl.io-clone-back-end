@@ -170,6 +170,26 @@ module.exports = (code) => {
 
           timeLeft--
 
+          if(!(currentWordHelp.match(/_/g).length <= 1) && (timeLeft % 5 == 0)) {
+
+            let underLineIndexes = []
+            for(let i = 0; i < currentWordHelp.length; i++)
+              if(currentWordHelp[i] == '_') underLineIndexes.push(i)
+
+            let replaceIndex = Math.floor(Math.random() * underLineIndexes.length)
+            currentWordHelp = currentWordHelp.substr(0, underLineIndexes[replaceIndex]) + currentWord[underLineIndexes[replaceIndex]] + currentWordHelp.substr(underLineIndexes[replaceIndex] + 1, currentWordHelp.length - underLineIndexes[replaceIndex] + 1)
+
+            for(p in players) {
+
+              if(p == currentDrawer)
+                continue
+
+              players[p].client.emit('wordTip', currentWordHelp)
+
+            }
+
+          }
+
         }, 1000)
 
         const finishDrawing = () => {

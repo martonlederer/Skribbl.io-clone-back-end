@@ -4,7 +4,8 @@ module.exports = (code) => {
 
   const gameCode = code,
   players = {},
-  words = []
+  words = [],
+  usedWords = []
 
   let round = 1,
   rounds = config.rounds,
@@ -150,7 +151,7 @@ module.exports = (code) => {
       if(playersOrder.length == 0)
         return
 
-      currentWord = words[Math.floor(Math.random() * words.length)],
+      currentWord = words.length == 0 ? usedWords[Math.floor(Math.random() * usedWords.length)] : words[Math.floor(Math.random() * words.length)],
       currentWordHelp = '',
       currentDrawer = playersOrder[i]
       drawingData = []
@@ -164,13 +165,18 @@ module.exports = (code) => {
 
       let startDrawing = new Promise((resolve, reject) => {
 
+        let thisRound = true
         timeLeft = (config.timeout / 1000)
 
         let timeLeftCounter = setInterval(() => {
 
+          //to make sure
+          if(!thisRound)
+            return
+
           timeLeft--
 
-          if(!(currentWordHelp.match(/_/g).length <= 1) && (timeLeft % 5 == 0)) {
+          if(currentWordHelp != null && !(currentWordHelp.match(/_/g).length <= 1) && (timeLeft % 5 == 0)) {
 
             let underLineIndexes = []
             for(let i = 0; i < currentWordHelp.length; i++)
@@ -181,7 +187,7 @@ module.exports = (code) => {
 
             for(p in players) {
 
-              if(p == currentDrawer)
+              if(p == currentDrawer || players[p].didGuessWord)
                 continue
 
               players[p].client.emit('wordTip', currentWordHelp)
@@ -208,11 +214,23 @@ module.exports = (code) => {
 
           }
 
+          if(players[currentDrawer] == undefined)
+            return
+
           players[currentDrawer].points += drawerPoints
 
           for(p in players) {
 
             players[p].client.emit('pointsUpdate', currentDrawer, players[currentDrawer].points)
+
+          }
+
+          thisRound = false
+
+          if(words.length != 0) {
+
+            words.splice(words.indexOf(currentWord), 1)
+            usedWords.push(currentWord)
 
           }
 

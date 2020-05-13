@@ -11,6 +11,11 @@ rooms = {};
 
 //using public folder for get requests
 app.use(express.static(__dirname + '/public', {extensions: ['html']}));
+app.get('*', (req, res) => {
+
+  res.send('public/index.html')
+
+})
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
